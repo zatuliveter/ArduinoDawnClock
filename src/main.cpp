@@ -13,7 +13,7 @@ Thread mainThread = Thread();
 
 Clock clock;
 Display display;
-Time alarmTime = Time(2, 00);
+Time alarmTime = Time(10, 00);
 Led led = Led();
 Alarm alarm = Alarm(&led, alarmTime, 60, 15);
 

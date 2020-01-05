@@ -22,19 +22,19 @@ public:
         
         _expectedPwm = map_double(bright, 0.0, 100.0, 0, 1023);
         
-        Serial.print("pwm=");
-        Serial.println(_expectedPwm);
+        // Serial.print("pwm=");
+        // Serial.println(_expectedPwm);
     }
 
     void run()
     {        
-        Serial.print("_actualPwm=");
-        Serial.println(_actualPwm);
-        Serial.println("");
+        // Serial.print("_actualPwm=");
+        // Serial.println(_actualPwm);
+        // Serial.println("");
 
-        Serial.print("_expectedPwm=");
-        Serial.println(_expectedPwm);
-        Serial.println("");
+        // Serial.print("_expectedPwm=");
+        // Serial.println(_expectedPwm);
+        // Serial.println("");
         
         if(_actualPwm != _expectedPwm)
         {
