@@ -59,12 +59,6 @@ public:
             rtc.SetDateTime(compiled);
         }
 
-    }
-
-    RtcDateTime getTime()
-    {
-        RtcDateTime now = rtc.GetDateTime();
-        
         //TODO: переместить надо наверное куда-то или сделать обработчик этой невалидной ситуации
         if (!now.IsValid())
         {
@@ -72,7 +66,11 @@ public:
             //    1) the battery on the device is low or even missing and the power line was disconnected
             Serial.println("RTC lost confidence in the DateTime!");
         }
+    }
 
+    RtcDateTime getTime()
+    {
+        RtcDateTime now = rtc.GetDateTime();        
         return now;
     } 
     

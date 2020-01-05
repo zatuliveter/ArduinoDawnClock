@@ -4,7 +4,7 @@
 #include "TM1637.h"
 #include "Thread.h"
 
-#define CLK 2//pins definitions for TM1637 and can be changed to other ports
+#define CLK 2 //pins definitions for TM1637 and can be changed to other ports
 #define DIO 3
 
 class Display : public Thread
@@ -28,22 +28,28 @@ public:
         int hour = dt.Hour();
         int minute = dt.Minute();
         
-        TimeDisp[0] = hour / 10;
+        if (hour / 10 == 0) 
+            TimeDisp[0] = 0x7f;
+        else
+            TimeDisp[0] = hour / 10;
+
         TimeDisp[1] = hour % 10;
         TimeDisp[2] = minute / 10;
-        TimeDisp[3] = minute % 10;
-            
-        tm1637.display(TimeDisp);
+        TimeDisp[3] = minute % 10;            
     }
 
 	void run()
     {		
+        // blink clock point
         if(clockPoint)
             tm1637.point(POINT_ON);
         else 
             tm1637.point(POINT_OFF);
 
         clockPoint = !clockPoint;
+
+        // display time
+        tm1637.display(TimeDisp);
 
 		runned();
 	}
