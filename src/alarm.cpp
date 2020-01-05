@@ -4,21 +4,25 @@
 #include "time.h"
 #include "led.cpp"
 #include "common.h"
+#include "Thread.h"
 
-class Alarm
+class Alarm : public Thread
 {
 private:
     Time _alarmTime;
+    RtcDateTime _currentTime;
     int _glowDurationMinutes;
-    int _warmDurationMinutes;    
-    Led led;
+    int _warmDurationMinutes;
+    Led* _led;
 
 public:
-    Alarm(Time alarmTime, int glowDurationMin, int warmDurationMinutes)
+    Alarm(Led* led, Time alarmTime, int glowDurationMin, int warmDurationMinutes)
     {
         _glowDurationMinutes = glowDurationMin;
         _alarmTime = alarmTime;
         _warmDurationMinutes = warmDurationMinutes;
+        _led = led;
+        setInterval(1000); 
     }
 
     void setAlarmTime(Time time)
@@ -26,18 +30,23 @@ public:
         _alarmTime = time;
     }
 
-    void doWork(RtcDateTime now)
+    void setTime(RtcDateTime now)
+    {
+        _currentTime = now;
+    }
+
+    void run()
     {
         RtcDateTime alarmDateTime = RtcDateTime(
-            now.Year(),
-            now.Month(),
-            now.Day(),
+            _currentTime.Year(),
+            _currentTime.Month(),
+            _currentTime.Day(),
             _alarmTime.getHour(),
             _alarmTime.getMinute(),
             0
         );
 
-        long nowSec = now.TotalSeconds64();
+        long nowSec = _currentTime.TotalSeconds64();
         long alarmSec = alarmDateTime.TotalSeconds64();
         
         if (nowSec > alarmSec)
@@ -67,10 +76,10 @@ public:
             {
                 bright = 0;
             }
-                        
-            led.setBright(bright);
+            
+            _led->setBright(bright);
         }
 
-        led.doWork();
+		runned();
     }
 };

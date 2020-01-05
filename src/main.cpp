@@ -13,15 +13,16 @@ Thread mainThread = Thread();
 
 Clock clock;
 Display display;
-Time alarmTime = Time(9, 0);
-Alarm alarm = Alarm(alarmTime, 60, 15);
+Time alarmTime = Time(2, 00);
+Led led = Led();
+Alarm alarm = Alarm(&led, alarmTime, 60, 15);
 
 
 void changeTime()
 {
     RtcDateTime now = clock.getTime();    
     display.setTime(now);
-    alarm.doWork(now);
+    alarm.setTime(now);
 }
 
 void setup () 
@@ -38,6 +39,8 @@ void setup ()
 
     threads.add(&mainThread);
 	threads.add(&display); 
+	threads.add(&alarm); 
+	threads.add(&led); 
 }
 
 

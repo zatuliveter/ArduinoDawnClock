@@ -1,7 +1,8 @@
 #include "Arduino.h"
 #include "common.h"
+#include "Thread.h"
 
-class Led 
+class Led : public Thread
 {
 private:
     const int analogOutPin = 9; 
@@ -10,7 +11,8 @@ private:
 
 public:
     Led()
-    {        
+    {
+        setInterval(100);
     }    
 
     void setBright(double bright)
@@ -18,22 +20,33 @@ public:
         if (bright < 0) bright = 0;
         if (bright > 100) bright = 100;
         
-        int pwm = map_double(bright, 0.0, 100.0, 0, 1023);
-
-        pwm = fixPWM(pwm);
-
-        //Serial.print("pwm=");
-        //Serial.println(pwm);
-
-        _expectedPwm = pwm;   
+        _expectedPwm = map_double(bright, 0.0, 100.0, 0, 1023);
+        
+        Serial.print("pwm=");
+        Serial.println(_expectedPwm);
     }
 
-    void doWork()
-    {
-        if(_actualPwm > _expectedPwm) _actualPwm -= 1;
-        if(_actualPwm < _expectedPwm) _actualPwm += 1;  
+    void run()
+    {        
+        Serial.print("_actualPwm=");
+        Serial.println(_actualPwm);
+        Serial.println("");
+
+        Serial.print("_expectedPwm=");
+        Serial.println(_expectedPwm);
+        Serial.println("");
         
-        analogWrite(analogOutPin, _actualPwm);        
+        if(_actualPwm != _expectedPwm)
+        {
+            if(_actualPwm > _expectedPwm) _actualPwm -= 1;
+            if(_actualPwm < _expectedPwm) _actualPwm += 1;
+            
+            _actualPwm = fixPWM(_actualPwm);
+
+            analogWrite(analogOutPin, _actualPwm);
+        }
+
+		runned();
     }
 
 private:
