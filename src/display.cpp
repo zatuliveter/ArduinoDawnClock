@@ -2,11 +2,12 @@
 #include "ThreeWire.h"
 #include "RtcDS1302.h"
 #include "TM1637.h"
+#include "Thread.h"
 
 #define CLK 2//pins definitions for TM1637 and can be changed to other ports
 #define DIO 3
 
-class Display
+class Display : public Thread
 {
 private:
     bool clockPoint = true;
@@ -19,17 +20,11 @@ public:
     {
         tm1637.set();
         tm1637.init();
+        setInterval(500);          
     }
 
-    void updateTime(const RtcDateTime& dt)
+    void setTime(const RtcDateTime& dt)
     {
-        if(clockPoint)
-            tm1637.point(POINT_ON);
-        else 
-            tm1637.point(POINT_OFF);
-
-        clockPoint = !clockPoint;
-
         int hour = dt.Hour();
         int minute = dt.Minute();
         
@@ -40,4 +35,16 @@ public:
             
         tm1637.display(TimeDisp);
     }
+
+	void run()
+    {		
+        if(clockPoint)
+            tm1637.point(POINT_ON);
+        else 
+            tm1637.point(POINT_OFF);
+
+        clockPoint = !clockPoint;
+
+		runned();
+	}
 };

@@ -4,7 +4,11 @@
 #include "display.cpp"
 #include "time.h"
 #include "alarm.cpp"
+#include "Thread.h"
+#include "ThreadController.h"
 
+
+ThreadController threads = ThreadController();
 
 Clock clock;
 Display display;
@@ -19,15 +23,18 @@ void setup ()
     // D9 и D10 - 15.6 кГц 10bit
     TCCR1A = 0b00000011; // 10bit
     TCCR1B = 0b00001001; // x1 fast pwm
+
+	threads.add(&display); 
 }
 
 void loop () 
 {
     RtcDateTime now = clock.getTime();
 
-    display.updateTime(now);
+    display.setTime(now);
 
     alarm.doWork(now);
     
-    delay(20);    
+
+    threads.run(); 
 }
