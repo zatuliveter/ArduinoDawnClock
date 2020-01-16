@@ -14,7 +14,7 @@ Thread mainThread = Thread();
 Clock clock;
 Display display;
 Time alarmTime = Time(12, 23);
-Led led = Led();
+Led led;
 Alarm alarm = Alarm(&led, alarmTime, 60, 15);
 
 
@@ -32,8 +32,7 @@ void setup ()
     // Serial.print("compiled time: ");
     // Serial.print(__DATE__);
     // Serial.println(__TIME__);
-    
-
+    led.init();
 
     mainThread.setInterval(500);
     mainThread.onRun(changeTime);

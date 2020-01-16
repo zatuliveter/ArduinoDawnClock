@@ -13,14 +13,17 @@ private:
 public:
     Led()
     {
+        setInterval(100);
+    }    
+    
+    void init()
+    {        
         // увеличиваем частоту шим чтобы led подсветка не моргала
         // D9 и D10 - 15.6 кГц 10bit
         TCCR1A = 0b00000011; // 10bit
         TCCR1B = 0b00001001; // x1 fast pwm
         pinMode(analogOutPin, OUTPUT);
-
-        setInterval(100);
-    }    
+    }
 
     void setBright(double bright)
     {
