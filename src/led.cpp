@@ -47,10 +47,17 @@ public:
         {
             if(_actualPwm > _expectedPwm) _actualPwm -= 1;
             if(_actualPwm < _expectedPwm) _actualPwm += 1;
-            
+           
             // код используемый в место analogWrite, т.к. последний глючит при значении шим = 255 (мы используем 10bit шим а не 8bit так что это критично)
-            sbi(TCCR1A, COM1A1);
-			OCR1A = _actualPwm; // set pwm duty
+            if(_actualPwm == 0)
+            {
+                digitalWrite(analogOutPin, LOW);
+            }
+            else {
+                sbi(TCCR1A, COM1A1);
+                OCR1A = _actualPwm; // set pwm duty
+            }
+            // конец analogWrite           
         }
 
 		runned();
