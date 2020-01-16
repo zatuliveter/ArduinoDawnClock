@@ -13,34 +13,36 @@ Thread mainThread = Thread();
 
 Clock clock;
 Display display;
-Time alarmTime = Time(12, 23);
-Led led;
-Alarm alarm = Alarm(&led, alarmTime, 60, 15);
+Time alarmTime = Time(13, 00);
+Led* pLed;
+Alarm* pAlarm;
 
 
 void changeTime()
 {
     RtcDateTime now = clock.getTime();    
     display.setTime(now);
-    alarm.setTime(now);
+    pAlarm->setTime(now);
 }
 
 void setup () 
 {
     Serial.begin(9600);
-    
+        
+    pLed = new Led();
+    pAlarm = new Alarm(pLed, alarmTime, 60, 15);
+
     // Serial.print("compiled time: ");
     // Serial.print(__DATE__);
     // Serial.println(__TIME__);
-    led.init();
 
     mainThread.setInterval(500);
     mainThread.onRun(changeTime);
 
     threads.add(&mainThread);
 	threads.add(&display); 
-	threads.add(&alarm); 
-	threads.add(&led); 
+	threads.add(pAlarm); 
+	threads.add(pLed); 
 }
 
 

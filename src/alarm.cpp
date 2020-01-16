@@ -13,15 +13,15 @@ private:
     RtcDateTime _currentTime;
     int _glowDurationMinutes;
     int _warmDurationMinutes;
-    Led* _led;
+    Led* _pLed;
 
 public:
-    Alarm(Led* led, Time alarmTime, int glowDurationMin, int warmDurationMinutes)
+    Alarm(Led* pLed, Time alarmTime, int glowDurationMin, int warmDurationMinutes)
     {
         _glowDurationMinutes = glowDurationMin;
         _alarmTime = alarmTime;
         _warmDurationMinutes = warmDurationMinutes;
-        _led = led;
+        _pLed = pLed;
         setInterval(1000); 
     }
 
@@ -77,7 +77,7 @@ public:
                 bright = 0;
             }
             
-            _led->setBright(bright);
+            _pLed->setBright(bright);
         }
 
 		runned();
