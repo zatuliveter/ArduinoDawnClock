@@ -1,6 +1,7 @@
 #include "Arduino.h"
 #include "common.h"
 #include "Thread.h"
+#include "wiring_private.h"
 
 class Led : public Thread
 {
@@ -12,6 +13,12 @@ private:
 public:
     Led()
     {
+        // увеличиваем частоту шим чтобы led подсветка не моргала
+        // D9 и D10 - 15.6 кГц 10bit
+        TCCR1A = 0b00000011; // 10bit
+        TCCR1B = 0b00001001; // x1 fast pwm
+        pinMode(analogOutPin, OUTPUT);
+
         setInterval(100);
     }    
 
@@ -41,18 +48,11 @@ public:
             if(_actualPwm > _expectedPwm) _actualPwm -= 1;
             if(_actualPwm < _expectedPwm) _actualPwm += 1;
             
-            _actualPwm = fixPWM(_actualPwm);
-
-            analogWrite(analogOutPin, _actualPwm);
+            // код используемый в место analogWrite, т.к. последний глючит при значении шим = 255 (мы используем 10bit шим а не 8bit так что это критично)
+            sbi(TCCR1A, COM1A1);
+			OCR1A = _actualPwm; // set pwm duty
         }
 
 		runned();
     }
-
-private:
-    int fixPWM(int pwm)
-    {
-        while (pwm >= 254 && pwm <= 256) pwm = 253;
-        return pwm;
-    }    
 };

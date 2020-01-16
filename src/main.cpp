@@ -13,7 +13,7 @@ Thread mainThread = Thread();
 
 Clock clock;
 Display display;
-Time alarmTime = Time(10, 00);
+Time alarmTime = Time(12, 23);
 Led led = Led();
 Alarm alarm = Alarm(&led, alarmTime, 60, 15);
 
@@ -29,10 +29,11 @@ void setup ()
 {
     Serial.begin(9600);
     
-    // увеличиваем частоту шим чтобы led подсветка не моргала
-    // D9 и D10 - 15.6 кГц 10bit
-    TCCR1A = 0b00000011; // 10bit
-    TCCR1B = 0b00001001; // x1 fast pwm
+    // Serial.print("compiled time: ");
+    // Serial.print(__DATE__);
+    // Serial.println(__TIME__);
+    
+
 
     mainThread.setInterval(500);
     mainThread.onRun(changeTime);
