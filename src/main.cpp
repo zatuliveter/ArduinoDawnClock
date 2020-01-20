@@ -11,25 +11,28 @@
 ThreadController threads = ThreadController();
 Thread mainThread = Thread();
 
-Clock clock;
-Display display;
-Time alarmTime = Time(13, 00);
+Clock* pClock;
+Display* pDisplay;
 Led* pLed;
 Alarm* pAlarm;
 
 
 void changeTime()
 {
-    RtcDateTime now = clock.getTime();    
-    display.setTime(now);
+    RtcDateTime now = pClock->getTime();    
+    pDisplay->setTime(now);
     pAlarm->setTime(now);
 }
 
 void setup () 
 {
     Serial.begin(9600);
-        
+    
+    pClock = new Clock();
+    pDisplay = new Display();    
     pLed = new Led();
+    
+    Time alarmTime = Time(9, 00);
     pAlarm = new Alarm(pLed, alarmTime, 60, 15);
 
     // Serial.print("compiled time: ");
@@ -40,7 +43,7 @@ void setup ()
     mainThread.onRun(changeTime);
 
     threads.add(&mainThread);
-	threads.add(&display); 
+	threads.add(pDisplay); 
 	threads.add(pAlarm); 
 	threads.add(pLed); 
 }

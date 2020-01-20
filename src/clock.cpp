@@ -27,19 +27,11 @@ public:
         rtc.Begin();
         
         RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
-        
-        Serial.print("compiled time: ");
-        Serial.print(__DATE__);
-        Serial.println(__TIME__);
-                
+        rtc.SetDateTime(compiled);
+
+        Serial.print("compiled time: ");                
         printDateTime(compiled);
-  
-        if (!rtc.IsDateTimeValid()) 
-        {
-            Serial.println("RTC lost confidence in the DateTime!");
-            rtc.SetDateTime(compiled);
-        }
-        
+          
         if (rtc.GetIsWriteProtected())
         {
             Serial.println("RTC was write protected, enabling writing now");
@@ -79,17 +71,19 @@ private:
     {
         char datestring[20];
 
-        snprintf_P(datestring, 
-                countof(datestring),
-                PSTR("%02u/%02u/%04u %02u:%02u:%02u"),
-                dt.Month(),
-                dt.Day(),
-                dt.Year(),
-                dt.Hour(),
-                dt.Minute(),
-                dt.Second() );
+        snprintf_P(
+            datestring, 
+            countof(datestring),
+            PSTR("%02u/%02u/%04u %02u:%02u:%02u"),
+            dt.Month(),
+            dt.Day(),
+            dt.Year(),
+            dt.Hour(),
+            dt.Minute(),
+            dt.Second() 
+        );
 
-        Serial.print(datestring);
+        Serial.println(datestring);
     }
 
 };
