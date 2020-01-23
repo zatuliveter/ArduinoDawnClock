@@ -32,7 +32,7 @@ void setup ()
     pDisplay = new Display();    
     pLed = new Led();
     
-    Time alarmTime = Time(9, 00);
+    Time alarmTime = Time(8, 30);
     pAlarm = new Alarm(pLed, alarmTime, 60, 15);
 
     // Serial.print("compiled time: ");
